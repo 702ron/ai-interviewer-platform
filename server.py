@@ -169,11 +169,15 @@ async def get_interview_status(
     if not interview or interview.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Interview not found")
     
+    # Check if interview has an article (within the session context)
+    article = await crud.get_article_by_interview_id(db, job_id)
+    has_article = article is not None
+    
     # Check database status first, then fall back to in-memory status
     status = interview.status or job_status.get(job_id, "unknown")
     
     # If interview has an article, status should be completed
-    if interview.article and status not in ["completed", "failed"]:
+    if has_article and status not in ["completed", "failed"]:
         status = "completed"
         # Update the database to reflect this
         await crud.update_interview_status(db, job_id, "completed")
