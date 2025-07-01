@@ -1,13 +1,30 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
+from dotenv import load_dotenv
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./interviewer.db")
+# Explicitly load environment variables
+load_dotenv()
+
+# Use a simple relative path for SQLite database
+DATABASE_URL = "sqlite+aiosqlite:///./interviewer.db"
+
+print(f"Using DATABASE_URL: {DATABASE_URL}")
 
 # Create Base for declarative models
 Base = declarative_base()
 
-engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+# Create engine with SQLite-compatible configuration
+engine = create_async_engine(
+    DATABASE_URL, 
+    echo=True, 
+    future=True,
+    # SQLite specific configuration
+    connect_args={
+        "check_same_thread": False,
+        "timeout": 30,
+    }
+)
 
 AsyncSessionLocal = sessionmaker(
     bind=engine,

@@ -256,6 +256,10 @@ async def interview_audio_stream(websocket: WebSocket, job_id: int, db: AsyncSes
 def root():
     return FileResponse("static/interview_client_auth.html")
 
+@app.get("/test")
+def test_page():
+    return FileResponse("static/test_page.html")
+
 @app.get("/admin/templates")
 def template_admin():
     return FileResponse("static/template_admin.html")
