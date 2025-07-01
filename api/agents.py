@@ -1,4 +1,4 @@
-from pydantic_ai import Agent
+from pydantic_ai import Agent, RunContext
 from schemas import InterviewTranscript, ArticleDraft, EditorFeedback, InterviewMessage
 from pydantic import BaseModel
 from typing import List
@@ -35,32 +35,26 @@ class WriterContext(BaseModel):
     version: int
     editor_feedback: List[str] = []
 
+# Create the writer agent with a base system prompt
 writer_agent = Agent(
     "openai:gpt-4-1106-preview",
     system_prompt=(
         "You are a professional writer creating articles from interview transcripts. "
         "Analyze the interview content and create a well-structured, engaging article. "
         "Tailor the tone and complexity to the target audience. "
-        "If editor feedback is provided, address all critiques in your revision. "
         "Include a compelling title that captures the essence of the interview."
     ),
     deps_type=WriterContext,
     result_type=ArticleDraft,
 )
 
+# Add dynamic system prompt based on editor feedback
 @writer_agent.system_prompt
-def writer_dynamic_prompt(ctx: WriterContext) -> str:
-    base_prompt = (
-        "You are a professional writer creating articles from interview transcripts. "
-        "Analyze the interview content and create a well-structured, engaging article. "
-        "Tailor the tone and complexity to the target audience. "
-        "If editor feedback is provided, address all critiques in your revision. "
-        "Include a compelling title that captures the essence of the interview."
-    )
-    if ctx.editor_feedback:
-        feedback_text = "\n".join(f"- {critique}" for critique in ctx.editor_feedback)
-        return f"{base_prompt}\n\nEditor feedback from previous version:\n{feedback_text}\n\nAddress all these points in your revision."
-    return base_prompt
+def writer_dynamic_prompt(ctx: RunContext[WriterContext]) -> str:
+    if ctx.deps.editor_feedback:
+        feedback_text = "\n".join(f"- {critique}" for critique in ctx.deps.editor_feedback)
+        return f"Editor feedback from previous version:\n{feedback_text}\n\nAddress all these points in your revision."
+    return ""
 
 # Editor Agent
 class EditorContext(BaseModel):

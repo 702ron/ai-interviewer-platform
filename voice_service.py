@@ -1,8 +1,27 @@
 import os
 import io
 from typing import AsyncGenerator, Optional
-from elevenlabs import VoiceSettings, generate, voices, set_api_key
 import asyncio
+
+# Initialize variables to None first
+VoiceSettings = None
+generate = None
+voices = None
+set_api_key = None
+ElevenLabs = None
+
+# Try to import ElevenLabs with proper fallback handling
+try:
+    from elevenlabs import VoiceSettings, generate, voices, set_api_key
+except ImportError:
+    try:
+        # Try newer ElevenLabs API
+        from elevenlabs.client import ElevenLabs
+        from elevenlabs import VoiceSettings, voices, set_api_key
+        generate = None  # Will need to be handled differently
+    except ImportError:
+        # Fallback for when ElevenLabs is not available - keep all as None
+        pass
 
 # Load API key from environment variable
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
@@ -58,6 +77,9 @@ async def synthesize_speech(
     if not ELEVENLABS_API_KEY:
         raise ValueError("ElevenLabs API key not configured")
     
+    if generate is None:
+        raise ValueError("ElevenLabs generate function not available - library version mismatch")
+    
     try:
         # Voice settings for natural speech
         voice_settings = VoiceSettings(
@@ -87,7 +109,7 @@ async def synthesize_speech(
 # Helper function to get available voices
 async def get_available_voices():
     """Get list of available ElevenLabs voices."""
-    if not ELEVENLABS_API_KEY:
+    if not ELEVENLABS_API_KEY or voices is None:
         return []
     
     try:
