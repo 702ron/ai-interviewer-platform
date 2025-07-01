@@ -122,6 +122,7 @@
       .interview-info {
         cursor: pointer;
         padding: 5px 0;
+        transition: all 0.2s ease;
       }
 
       .interview-info:hover {
@@ -129,6 +130,16 @@
         padding: 10px;
         margin: -5px;
         border-radius: 5px;
+      }
+
+      .interview-info.processing {
+        opacity: 0.7;
+        cursor: help;
+      }
+
+      .interview-info.completed {
+        border-left: 3px solid #28a745;
+        padding-left: 7px;
       }
 
       .export-buttons {
@@ -560,17 +571,25 @@
           `
             : "";
 
+          const statusClass = interview.has_article
+            ? "completed"
+            : "processing";
+          const statusIcon = interview.has_article ? " ✅" : " ⏳";
+          const statusText = interview.has_article
+            ? "Ready to view"
+            : "Click to check status";
+
           item.innerHTML = `
-            <div class="interview-info" onclick="viewArticle(${interview.id}, ${
-            interview.has_article
-          })">
+            <div class="interview-info ${statusClass}" onclick="viewArticle(${
+            interview.id
+          }, ${interview.has_article})" title="${statusText}">
               <strong>${interview.topic}</strong> - ${
             interview.target_audience
           }<br>
               <small>${new Date(
                 interview.created_at
               ).toLocaleDateString()}</small>
-              ${interview.has_article ? " ✅" : " ⏳"}
+              ${statusIcon}
             </div>
             ${exportButtons}
           `;
@@ -581,7 +600,49 @@
 
       function viewArticle(interviewId, hasArticle) {
         if (hasArticle) {
-          window.location.href = `/interviews/${interviewId}/result`;
+          window.location.href = `/article?id=${interviewId}`;
+        } else {
+          // Provide feedback for interviews without articles
+          updateStatus("Checking interview status...", "info");
+          checkInterviewStatus(interviewId);
+        }
+      }
+
+      async function checkInterviewStatus(interviewId) {
+        try {
+          const response = await fetch(`/interviews/${interviewId}/status`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          });
+
+          if (response.ok) {
+            const statusData = await response.json();
+            const status = statusData.status;
+
+            if (status === "completed") {
+              updateStatus("Interview complete! Loading article...", "success");
+              // Refresh the interview history to update the UI
+              setTimeout(() => {
+                loadInterviewHistory();
+                window.location.href = `/article?id=${interviewId}`;
+              }, 1000);
+            } else if (status === "running" || status === "pending") {
+              updateStatus(
+                "Interview is still processing. Please wait...",
+                "info"
+              );
+            } else if (status.startsWith("failed")) {
+              updateStatus(`Interview failed: ${status}`, "error");
+            } else if (status === "waiting_for_voice") {
+              updateStatus("Interview is waiting for voice input.", "info");
+            } else {
+              updateStatus(`Interview status: ${status}`, "info");
+            }
+          } else {
+            const error = await response.json();
+            updateStatus(`Failed to check status: ${error.detail}`, "error");
+          }
+        } catch (error) {
+          updateStatus(`Error checking status: ${error.message}`, "error");
         }
       }
 
