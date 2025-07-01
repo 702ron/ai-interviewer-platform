@@ -95,6 +95,14 @@ async def get_article_by_interview_id(session: AsyncSession, interview_id: int) 
     result = await session.execute(select(Article).where(Article.interview_id == interview_id))
     return result.scalar_one_or_none()
 
+async def update_interview_status(session: AsyncSession, interview_id: int, status: str) -> Interview:
+    """Update interview status in the database"""
+    interview = await get_interview(session, interview_id)
+    if interview:
+        interview.status = status
+        await session.commit()
+        await session.refresh(interview)
+    return interview
 
 # Interview Template CRUD operations
 async def create_template(

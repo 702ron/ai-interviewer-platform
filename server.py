@@ -69,6 +69,10 @@ class ArticleResponse(BaseModel):
 async def run_workflow(interview_id: int, topic: str, target_audience: str, transcript: Optional[InterviewTranscript] = None):
     job_status[interview_id] = "running"
     
+    # Update database status
+    async with AsyncSessionLocal() as session:
+        await crud.update_interview_status(session, interview_id, "running")
+    
     try:
         # Step 1: Use provided transcript or generate mock interview
         if transcript is None:
@@ -114,11 +118,17 @@ async def run_workflow(interview_id: int, topic: str, target_audience: str, tran
         async with AsyncSessionLocal() as session:
             await crud.update_interview_transcript(session, interview_id, transcript.model_dump_json())
             await crud.create_article(session, interview_id, draft.title, draft.content, draft.version)
+            await crud.update_interview_status(session, interview_id, "completed")
         
         job_status[interview_id] = "completed"
         
     except Exception as e:
-        job_status[interview_id] = f"failed: {str(e)}"
+        error_status = f"failed: {str(e)}"
+        job_status[interview_id] = error_status
+        
+        # Update database status
+        async with AsyncSessionLocal() as session:
+            await crud.update_interview_status(session, interview_id, error_status)
         raise
 
 @app.post("/interviews/start", response_model=InterviewStartResponse)
@@ -135,14 +145,16 @@ async def start_interview(
         user_id=current_user.id,  # Associate with current user
         template_id=req.template_id  # Associate with template if provided
     )
-    job_status[interview.id] = "pending"
     
     if req.mode == "text":
         # Traditional text-based workflow
+        job_status[interview.id] = "pending"
+        await crud.update_interview_status(db, interview.id, "pending")
         background_tasks.add_task(run_workflow, interview.id, req.topic, req.target_audience)
     else:
         # Voice mode - will be handled via WebSocket
         job_status[interview.id] = "waiting_for_voice"
+        await crud.update_interview_status(db, interview.id, "waiting_for_voice")
     
     return InterviewStartResponse(job_id=interview.id)
 
@@ -157,7 +169,15 @@ async def get_interview_status(
     if not interview or interview.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Interview not found")
     
-    status = job_status.get(job_id, "unknown")
+    # Check database status first, then fall back to in-memory status
+    status = interview.status or job_status.get(job_id, "unknown")
+    
+    # If interview has an article, status should be completed
+    if interview.article and status not in ["completed", "failed"]:
+        status = "completed"
+        # Update the database to reflect this
+        await crud.update_interview_status(db, job_id, "completed")
+    
     return InterviewStatusResponse(job_id=job_id, status=status)
 
 @app.get("/interviews/{job_id}/result", response_model=ArticleResponse)
@@ -214,6 +234,7 @@ async def interview_audio_stream(websocket: WebSocket, job_id: int, db: AsyncSes
         return
     
     job_status[job_id] = "interviewing"
+    await crud.update_interview_status(db, job_id, "interviewing")
     
     try:
         # Load template if associated with interview
@@ -248,8 +269,11 @@ async def interview_audio_stream(websocket: WebSocket, job_id: int, db: AsyncSes
         
     except WebSocketDisconnect:
         job_status[job_id] = "disconnected"
+        await crud.update_interview_status(db, job_id, "disconnected")
     except Exception as e:
-        job_status[job_id] = f"error: {str(e)}"
+        error_status = f"error: {str(e)}"
+        job_status[job_id] = error_status
+        await crud.update_interview_status(db, job_id, error_status)
         await websocket.close(code=4000, reason=str(e))
 
 @app.get("/")
@@ -266,4 +290,8 @@ def template_admin():
 
 @app.get("/admin/analytics")
 def analytics_dashboard():
-    return FileResponse("static/analytics_dashboard.html") 
+    return FileResponse("static/analytics_dashboard.html")
+
+@app.get("/article")
+def article_view():
+    return FileResponse("static/article_view.html") 
