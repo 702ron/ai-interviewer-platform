@@ -2,6 +2,10 @@
 
 An advanced multi-agent AI system that conducts voice-based interviews and automatically generates polished, publishable articles from the conversations. Now with comprehensive authentication, templates, analytics, export options, and real-time transcript display!
 
+## 📊 [View Project Presentation](presentation.html)
+
+**[Click here to view the full project presentation](presentation.html)** - A comprehensive overview of the AI Marketing Interview System, including technical architecture, screenshots, and measurable impact metrics.
+
 ## 🚀 Project Status: Phase 5 Complete! ✅
 
 All development phases have been successfully completed:
