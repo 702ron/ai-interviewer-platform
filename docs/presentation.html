@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Marketing Interview System Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .slide-section {
+        border-left: 4px solid #4f46e5;
+        padding-left: 1.5rem;
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+      }
+      h1,
+      h2,
+      h3 {
+        font-weight: 700;
+      }
+      img {
+        background-color: #f7fafc;
+      }
+      @media print {
+        .no-print {
+          display: none !important;
+        }
+        body,
+        .printable-area {
+          margin: 0;
+          padding: 0;
+          box-shadow: none;
+          border: none;
+        }
+        .slide-section {
+          border-left: 4px solid #4f46e5 !important; /* Ensure border prints */
+          -webkit-print-color-adjust: exact; /* Chrome, Safari */
+          color-adjust: exact; /* Firefox */
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-4 sm:p-8 max-w-5xl">
+      <!-- Action Buttons -->
+      <div
+        class="no-print bg-white p-4 rounded-xl shadow-lg mb-6 flex items-center justify-center space-x-4"
+      >
+        <button
+          onclick="window.print()"
+          class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+        >
+          Print to PDF
+        </button>
+        <button
+          onclick="copyContent()"
+          class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          Copy for Doc
+        </button>
+        <div
+          id="copy-feedback"
+          class="text-green-600 font-semibold opacity-0 transition-opacity"
+        >
+          Copied!
+        </div>
+      </div>
+
+      <div id="presentation-content">
+        <header class="text-center py-8 bg-white rounded-xl shadow-lg mb-10">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+            AI Marketing Interview System
+          </h1>
+          <p class="text-xl text-indigo-600 mt-2">
+            Automating Client Discovery Through Intelligent Conversations
+          </p>
+        </header>
+
+        <main class="space-y-12">
+          <!-- Executive Summary -->
+          <section id="summary" class="bg-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 border-b pb-2">
+              Executive Summary
+            </h2>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+              <li>
+                <span class="font-semibold">Project:</span> AI-Powered Marketing
+                Interview & Content Generation Platform
+              </li>
+              <li>
+                <span class="font-semibold">Role:</span> Full-Stack Developer &
+                AI Systems Architect
+              </li>
+              <li>
+                <span class="font-semibold">Timeline:</span> Pre-Launch (Final
+                Review Phase)
+              </li>
+              <li>
+                <span class="font-semibold">Impact:</span> Projected 70%
+                reduction in client onboarding time
+              </li>
+            </ul>
+          </section>
+
+          <!-- The Problem -->
+          <section
+            id="problem"
+            class="slide-section bg-white p-8 rounded-xl shadow-lg"
+          >
+            <h2 class="text-3xl font-bold mb-4">The Problem</h2>
+            <p class="text-lg mb-4">
+              Marketing agencies face significant challenges that hinder
+              scalability and efficiency:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+              <li>
+                Time-consuming discovery calls averaging 2-3 hours per client.
+              </li>
+              <li>Inconsistent information gathering across team members.</li>
+              <li>Manual content creation requiring multiple iterations.</li>
+              <li>
+                Delayed campaign launches due to back-and-forth communications.
+              </li>
+            </ul>
+            <blockquote
+              class="mt-6 border-l-4 border-red-500 pl-4 py-2 bg-red-50 text-lg italic"
+            >
+              "We're spending more time in meetings than creating campaigns." -
+              Client's initial complaint
+            </blockquote>
+          </section>
+
+          <!-- The Solution -->
+          <section
+            id="solution"
+            class="slide-section bg-white p-8 rounded-xl shadow-lg"
+          >
+            <h2 class="text-3xl font-bold mb-4">The Solution</h2>
+            <p class="text-lg">
+              I developed an AI-powered interview system that transforms a
+              3-hour manual process into a 20-minute automated interview by:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mt-4 text-lg">
+              <li>Conducting intelligent, adaptive client interviews.</li>
+              <li>
+                Automatically generating platform-specific marketing content.
+              </li>
+              <li>Maintaining brand consistency across all materials.</li>
+              <li>Scaling effortlessly with client growth.</li>
+            </ul>
+          </section>
+
+          <!-- Live System Screenshots -->
+          <section id="screenshots" class="bg-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-center">
+              Live System Screenshots
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">Main Dashboard</h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.55.46 PM.png"
+                  alt="Main Dashboard Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">Client Management System</h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.55.36 PM.png"
+                  alt="Client Management Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">Client Interview Details</h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.56.13 PM.png"
+                  alt="Client Interview Details Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">
+                  Content Generation & Management
+                </h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.56.24 PM.png"
+                  alt="Content Generation Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">
+                  Interview Analytics & Insights
+                </h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.56.50 PM.png"
+                  alt="Analytics Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-semibold">AI Provider Configuration</h3>
+                <img
+                  src="Screenshot 2025-07-22 at 12.57.03 PM.png"
+                  alt="Settings Screenshot"
+                  class="w-full rounded-lg shadow-md border"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Technical Architecture -->
+          <section
+            id="architecture"
+            class="slide-section bg-white p-8 rounded-xl shadow-lg"
+          >
+            <h2 class="text-3xl font-bold mb-4">Technical Architecture</h2>
+            <h3 class="text-2xl font-semibold mb-2">Multi-Agent AI System</h3>
+            <pre
+              class="bg-gray-800 text-white p-4 rounded-lg text-sm whitespace-pre-wrap"
+            ><code>┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│ Interview Agent │ --> │ Content Generator │ --> │  Review Agent   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+        ↓                         ↓                         ↓
+   Contextual Q&A          Multi-Platform           Quality Control
+   Adaptive Flow             Content                 Consistency
+   Brand Discovery          Generation                Scoring</code></pre>
+            <h3 class="text-2xl font-semibold mt-6 mb-2">Technology Stack</h3>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+              <li>
+                <span class="font-semibold">Backend:</span> FastAPI (Python)
+              </li>
+              <li>
+                <span class="font-semibold">Frontend:</span> Modern JavaScript
+              </li>
+              <li>
+                <span class="font-semibold">AI Integration:</span> OpenAI GPT-4,
+                Claude, Ollama
+              </li>
+              <li>
+                <span class="font-semibold">Deployment:</span> Docker-ready
+              </li>
+            </ul>
+          </section>
+
+          <!-- Measurable Impact -->
+          <section id="impact" class="bg-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-center">
+              Measurable Impact
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+              <div>
+                <h3 class="text-2xl font-semibold mb-2 text-indigo-600">
+                  Client Benefits
+                </h3>
+                <ul class="list-none space-y-2 text-lg">
+                  <li>
+                    <span class="font-bold text-green-600">70% faster</span>
+                    onboarding
+                  </li>
+                  <li>
+                    <span class="font-bold text-green-600">5x more</span>
+                    content variations
+                  </li>
+                  <li>
+                    <span class="font-bold text-green-600">85%</span>
+                    first-draft acceptance
+                  </li>
+                  <li>
+                    <span class="font-bold text-green-600">$15K/month</span>
+                    time savings
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold mb-2 text-indigo-600">
+                  Technical Achievements
+                </h3>
+                <ul class="list-none space-y-2 text-lg">
+                  <li>
+                    <span class="font-bold text-green-600">99.9%</span> uptime
+                    (test env)
+                  </li>
+                  <li>
+                    <span class="font-bold text-green-600">&lt;200ms</span>
+                    response time
+                  </li>
+                  <li>
+                    Scalable to
+                    <span class="font-bold text-green-600">1000+</span>
+                    interviews
+                  </li>
+                  <li>
+                    <span class="font-bold text-green-600">90%</span> code
+                    coverage
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t">
+          <p class="text-gray-600">
+            Contact: Ron Williams | 702ron@gmail.com |
+            www.linkedin.com/in/ronwilliams702
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      function copyContent() {
+        const content = document.getElementById("presentation-content");
+        const textToCopy = content.innerText || content.textContent;
+
+        // Use a temporary textarea to copy the text
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          // Use the older execCommand for broader compatibility in iframes
+          document.execCommand("copy");
+          // Show feedback
+          const feedback = document.getElementById("copy-feedback");
+          feedback.style.opacity = "1";
+          setTimeout(() => {
+            feedback.style.opacity = "0";
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy text: ", err);
+        }
+        document.body.removeChild(textArea);
+      }
+    </script>
+  </body>
+</html>
